@@ -1,0 +1,174 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Juicebox API Test",
+    "version": "1.0.0",
+    "description": ""
+  },
+  "servers": [
+    {
+      "url": "{{base_url}}"
+    }
+  ],
+  "paths": {
+    "/register": {
+      "post": {
+        "summary": "Register",
+        "responses": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "password_confirmation": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "name": "John Doe",
+                "email": "john@example.com",
+                "password": "password123",
+                "password_confirmation": "password123"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "summary": "Login",
+        "responses": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "email": "john@example.com",
+                "password": "password123"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/weather": {
+      "get": {
+        "summary": "Get Weather",
+        "responses": {}
+      }
+    },
+    "/posts": {
+      "get": {
+        "summary": "List Posts",
+        "responses": {}
+      },
+      "post": {
+        "summary": "Create Post",
+        "responses": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "title": "Post Pertama",
+                "content": "Ini isi konten post untuk testing API."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/2": {
+      "get": {
+        "summary": "Get Single Post",
+        "responses": {}
+      },
+      "patch": {
+        "summary": "Update Post",
+        "responses": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "title": "Judul Post Diperbarui"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/1": {
+      "delete": {
+        "summary": "Delete Post",
+        "responses": {}
+      }
+    },
+    "/users/1": {
+      "get": {
+        "summary": "Get User Profile",
+        "responses": {}
+      }
+    },
+    "/logout": {
+      "post": {
+        "summary": "Logout",
+        "responses": {}
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ]
+}

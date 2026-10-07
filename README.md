@@ -1,58 +1,109 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Juicebox - Laravel Developer Code Test (API Development)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+RESTful API built with Laravel 11 for Post Management, User Authentication, and External Weather Integration.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🛠️ Requirements & Stack
+- PHP >= 8.2
+- MySQL / MariaDB
+- Composer
+- Laravel Sanctum
+- WeatherAPI.com Integration
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🚀 Setup & Installation Instructions
 
-## Learning Laravel
+1. **Clone Repository**
+   ```bash
+   git clone <repository-url>
+   cd juicebox-api
+   ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+2. **Install Dependencies**
+   ```bash
+   composer install
+   ```
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+3. **Environment Setup**
+   Copy file `.env.example` to `.env` and set up your environment variables:
+   ```bash
+   cp .env.example .env
+   ```
+   Ensure the following configurations are set:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=juicebox_api
+   DB_USERNAME=root
+   DB_PASSWORD=
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+   QUEUE_CONNECTION=database
+   WEATHER_API_KEY=your_weather_api_key_here
+   ```
 
-## Agentic Development
+4. **Generate Application Key & Run Migrations**
+   ```bash
+   php artisan key:generate
+   php artisan migrate
+   ```
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+5. **Run Queue Worker**
+   To process background queued jobs (e.g., Welcome Emails):
+   ```bash
+   php artisan queue:work
+   ```
 
+6. **Run Artisan Scheduler (Weather Cron)**
+   To trigger the hourly weather update background job manually or locally:
+   ```bash
+   php artisan schedule:run
+   ```
+
+---
+
+## ⚙️ Testing Features & Artisan Commands
+
+### 1. Testing Welcome Email Queue Manually
+You can dispatch the welcome email job manually for any registered user using the custom Artisan command:
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+php artisan email:send-welcome {userId}
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2. Running Automated Tests
+Run PHPUnit feature & unit tests (including mock HTTP tests for Weather API):
+```bash
+php artisan test
+```
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🌤️ Weather API Setup
+1. Register a free account at [WeatherAPI.com](https://www.weatherapi.com/).
+2. Obtain your API Key from the dashboard.
+3. Place the API Key into `.env` file: `WEATHER_API_KEY=your_key_here`.
+4. Weather data for **Perth, Australia** is cached for **15 minutes** (`900` seconds) on `/api/weather` to optimize performance and prevent API limit throttling.
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 📚 API Endpoints Overview
 
-## Security Vulnerabilities
+### Authentication
+- `POST /api/register` - Register a new user & trigger Welcome Email queue
+- `POST /api/login` - Authenticate user & receive Sanctum Bearer Token
+- `POST /api/logout` - Revoke current token (Protected)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Posts (Protected)
+- `GET /api/posts` - List paginated posts
+- `GET /api/posts/{id}` - Get specific post
+- `POST /api/posts` - Create post
+- `PATCH /api/posts/{id}` - Update post
+- `DELETE /api/posts/{id}` - Delete post
 
-## License
+### Users (Protected)
+- `GET /api/users/{id}` - Get specific user profile
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### External API
+- `GET /api/weather` - Get Perth current weather data (Cached 15m)

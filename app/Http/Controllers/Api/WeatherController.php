@@ -12,7 +12,7 @@ class WeatherController extends Controller
     {
         return Cache::remember('perth_weather', 900, function () { // Cache 15 menit
             $apiKey = env('WEATHER_API_KEY');
-            $response = Http::get("https://api.weatherapi.com/v1/current.json", [
+            $response = Http::withoutVerifying()->get("https://api.weatherapi.com/v1/current.json", [
                 'key' => $apiKey,
                 'q' => 'Perth'
             ]);

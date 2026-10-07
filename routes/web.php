@@ -6,6 +6,10 @@ use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\WeatherController;
 
+Route::get('/', function () {
+    return view('welcome');
+});
+
 Route::prefix('api')->group(function () {
     // Public Endpoints
     Route::post('/register', [AuthController::class, 'register']);
